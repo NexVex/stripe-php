@@ -25,7 +25,7 @@ class Stripe_ApiRequestor
 
   private static function _encodeObjects($d)
   {
-    if ($d instanceof Stripe_ApiRequestor) {
+    if ($d instanceof Stripe_ApiResource) {
       return $d->id;
     } else if ($d === true) {
       return 'true';
@@ -98,6 +98,8 @@ class Stripe_ApiRequestor
     $headers = array('X-Stripe-Client-User-Agent: ' . json_encode($ua),
 		     'User-Agent: Stripe/v1 PhpBindings/' . Stripe::VERSION,
                      'Authorization: Bearer ' . $myApiKey);
+    if (Stripe::$apiVersion)
+      $headers[] = 'Stripe-Version: ' . Stripe::$apiVersion;
     list($rbody, $rcode) = $this->_curlRequest($meth, $absUrl, $headers, $params);
     return array($rbody, $rcode, $myApiKey);
   }
